@@ -1,0 +1,152 @@
+id: subliminal_lingo
+version: 1.0.6
+extensionVersion: 1.4.10
+priority: 30
+name: SubliminalLingo
+description: A translation expert that helps users learn vocabulary by preserving English words with Chinese translations in parentheses.
+avatar: https://sfile.chatglm.cn/testpath/call_beabb68f-ef8e-11ef-8b8f-ea91c0c3bdd0_0.png
+details: |-
+  将英文关键词保留并在括号中显示中文翻译，帮助用户加深对词汇的记忆。支持中英互译，保持句子流畅自然。
+
+  效果如下：
+
+  原文：The implementation uses advanced algorithms.
+
+  结果：该_实现_（implementation）使用_高级_（advanced）算法。
+
+  原文：Please check the settings.
+
+  结果：请检查_设置_（settings）。
+
+i18n:
+  zh-CN:
+    name: 潜意识学习_调整版
+    description: 通过保留部分英文单词及其中文翻译，帮助读者在阅读过程中自然习得词汇。
+  zh-TW:
+    name: 潜意识学习_调整版
+    description: 通過保留部分英文單詞及其中文翻譯，幫助讀者在閱讀過程中自然習得詞彙。
+
+author: zk
+disableSameLang: true
+temperature: 0.3
+maxTextGroupLengthPerRequestForSubtitle: 1
+maxTextGroupLengthPerRequest: 1
+
+env:
+  imt_source_field: text
+  imt_trans_field: text
+  imt_sub_source_field: source
+  imt_sub_trans_field: result
+  imt_yaml_item: |-
+    - id: {{id}}
+      {{imt_source_field}}: {{text}}
+  imt_subtitle_yaml_item: |-
+    - id: {{id}}
+      {{imt_sub_source_field}}: {{text}}
+  normal_result_yaml_example: |-
+    Example Request:
+      - id: 1
+        {{imt_source_field}}: The implementation uses advanced algorithms.
+    Example Result:
+      - id: 1
+        {{imt_trans_field}}: 该_实现_（implementation）使用_高级_（advanced）算法。
+  subtitle_result_yaml_example: |-
+    Example Request:
+      - id: 1
+        {{imt_sub_source_field}}: The implementation uses advanced algorithms.
+      - id: 2
+        {{imt_sub_source_field}}: Please check the settings.
+    Example Result:
+      - id: 1
+        {{imt_sub_trans_field}}: 该_实现_（implementation）使用_高级_（advanced）算法。
+        {{imt_sub_source_field}}: The implementation uses advanced algorithms.
+      - id: 2
+        {{imt_sub_trans_field}}: 请检查_设置_（settings）。
+        {{imt_sub_source_field}}: Please check the settings.
+
+systemPrompt: >-
+  Objective: Please translate the subtitles in the video according to its theme and character roles.Translate text while preserving difficult or unusual English words in parentheses.
+
+  Rules:
+  1. Keep proper nouns (like Chrome, Tauri) in original form without translation
+  2. For technical or important words, use format: _翻译_（word）
+  3. Maintain natural sentence flow and readability
+  4. Never translate entire phrases or sentences in parentheses
+
+prompt: |-
+  Please translate the subtitles in the video according to its theme and character roles.Translate text while preserving difficult or unusual English words in parentheses. Keep proper nouns as is. For important words use: _翻译_（word）. Only show results.
+
+  Source Text: The implementation uses advanced algorithms.
+  Result: 该_实现_（implementation）使用_高级_（advanced）算法。
+
+  Source Text: Please check the settings.
+  Result: 请检查_设置_（settings）。
+
+  Source Text: {{text}}
+  Result:
+
+multiplePrompt: |-
+  Translate multiple texts. Please translate the subtitles in the video according to its theme and character roles.Translate text while preserving difficult or unusual English words in parentheses. Keep proper nouns as is. For important words use: _翻译_（word）. Only show results.
+  Maintain context and consistency across translations.
+
+  Source Text 1: The implementation uses advanced algorithms.
+  Result 1: 该_实现_（implementation）使用_高级_（advanced）算法。  
+
+  Source Text 2: Please check the settings.
+  Result 2: 请检查_设置_（settings）。
+
+  {{yaml}}
+
+subtitlePrompt: |-
+  Translate subtitle texts. Please translate the subtitles in the video according to its theme and character roles.Translate text while preserving difficult or unusual English words in parentheses.Keep proper nouns as is. For important words use: _翻译_（word）.
+  Maintain natural flow and readability. Keep original line breaks and timing.
+
+  Example format:
+  {{subtitle_result_yaml_example}}
+
+  Start translation:
+  {{yaml}}
+
+langOverrides:
+  - id: auto2zh-TW
+    systemPrompt: >-
+      Objective: Please translate the subtitles in the video according to its theme and character roles.Translate text while preserving difficult or unusual English words in parentheses.Translate text while preserving key English words in parentheses.
+      Rules:
+      1. Keep proper nouns (like Chrome, Tauri) in original form without translation
+      2. For technical or important words, use format: _繁體中文翻譯_（word） 
+      3. Maintain natural sentence flow and readability
+      4. Never translate entire phrases or sentences in parentheses
+    prompt: |-
+      Translate the text. Keep proper nouns as is. For important words use: _翻譯_（word）. Only show results.
+
+      Source Text: The implementation uses advanced algorithms.
+      Result: 該_實現_（implementation）使用_高級_（advanced）算法。
+
+      Source Text: Please check the settings.
+      Result: 請檢查_設置_（settings）。
+
+      Source Text: {{text}}
+      Result:
+
+    multiplePrompt: |-
+      Translate multiple texts. Please translate the subtitles in the video according to its theme and character roles.Translate text while preserving difficult or unusual English words in parentheses. Keep proper nouns as is. For important words use: word（翻譯）. Only show results.
+      Maintain context and consistency across translations.
+
+      Source Text 1: The implementation uses advanced algorithms.
+      Result 1: 該_實現_（implementation）使用_高級_（advanced）算法。
+
+      Source Text 2: Please check the settings.
+      Result 2: 請檢查_設置_（settings）。
+
+      {{yaml}}
+
+    subtitlePrompt: |-
+      Translate subtitle texts. Please translate the subtitles in the video according to its theme and character roles.Translate text while preserving difficult or unusual English words in parentheses.Keep proper nouns as is. For important words use: _翻譯_（word）.
+      Maintain natural flow and readability. Keep original line breaks and timing.
+
+      Example format:
+      {{subtitle_result_yaml_example}}
+
+      Start translation:
+      {{yaml}}
+multipleSystemPrompt: ""
